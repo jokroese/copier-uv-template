@@ -1,0 +1,19 @@
+[build-system]
+requires = ["uv_build>={{ uv_build_floor }},<{{ uv_build_ceiling }}"]
+build-backend = "uv_build"
+
+[project]
+name = "{{ project_slug }}"
+version = "0.1.0"
+description = "{{ description }}"
+readme = "README.md"
+requires-python = ">={{ python_version }}"
+dependencies = []
+
+{% if project_kind == "app" -%}
+[project.scripts]
+{{ project_slug }} = "{{ package_name }}.__main__:main"
+{%- endif %}
+
+[dependency-groups]
+dev = ["pre-commit", "pytest", "pyright[nodejs]", "ruff"]
