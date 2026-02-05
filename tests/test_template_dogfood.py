@@ -35,8 +35,6 @@ def _assert_generated_repo_pins_uv(project_dir: Path) -> None:
     assert "required-version" in text, "uv.toml must set required-version"
 
 
-
-
 def test_generate_app_project_and_run_quality(copie) -> None:
     result = copie.copy(
         extra_answers={
