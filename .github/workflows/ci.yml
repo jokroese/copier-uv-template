@@ -2,13 +2,10 @@ name: CI
 
 on:
   push:
-    branches: [main]
   pull_request:
-    branches: [main]
 
 jobs:
-  template-repo:
-    name: Template repo checks
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -29,77 +26,25 @@ jobs:
         run: uv run pyright
       - name: Test
         run: uv run pytest
+      - name: Build
+        run: uv build
 
-  integration-app:
-    name: Integration test (app)
+  dogfood:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
           python-version-file: ".python-version"
+
       - uses: astral-sh/setup-uv@v7
         with:
           enable-cache: true
-      - name: Install dependencies
-        run: uv sync --locked --dev
-      - name: Render app template
-        run: |
-          TEMP_DIR=$(mktemp -d)
-          uvx copier copy --trust -f \
-            -d 'project_name=Smoke App' \
-            -d 'project_kind=app' \
-            -d 'python_version=3.12' \
-            -d 'uv_version=0.9.20' \
-            -d 'uv_version_next_minor=0.10.0' \
-            -d 'package_name=smoke_app' \
-            -d 'project_slug=smoke-app' \
-            -d 'description=Integration test app' \
-            -d 'use_precommit=true' \
-            -d 'uv_precommit_rev=0.9.20' \
-            . "$TEMP_DIR"
-          cd "$TEMP_DIR"
-          uv sync --dev
-          uv run ruff check .
-          uv run ruff format --check .
-          uv run pyright
-          uv run pytest
 
-  integration-library:
-    name: Integration test (library)
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-      - name: Set up Python
-        uses: actions/setup-python@v6
-        with:
-          python-version-file: ".python-version"
-      - uses: astral-sh/setup-uv@v7
-        with:
-          enable-cache: true
-      - name: Install dependencies
-        run: uv sync --locked --dev
-      - name: Render library template
-        run: |
-          TEMP_DIR=$(mktemp -d)
-          uvx copier copy --trust -f \
-            -d 'project_name=Smoke Library' \
-            -d 'project_kind=library' \
-            -d 'python_version=3.12' \
-            -d 'uv_version=0.9.20' \
-            -d 'uv_version_next_minor=0.10.0' \
-            -d 'package_name=smoke_library' \
-            -d 'project_slug=smoke-library' \
-            -d 'description=Integration test library' \
-            -d 'use_precommit=true' \
-            -d 'uv_precommit_rev=0.9.20' \
-            . "$TEMP_DIR"
-          cd "$TEMP_DIR"
-          uv sync --dev
-          uv run ruff check .
-          uv run ruff format --check .
-          uv run pyright
-          uv run pytest
-          uv build
+      - name: Install template repo dependencies (incl. dogfood group)
+        run: uv sync --locked --group dogfood --group dev
 
+      - name: Run template dogfood tests
+        run: uv run pytest -q

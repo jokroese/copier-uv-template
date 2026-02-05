@@ -1,7 +1,7 @@
 repos:
-  # Keep uv.lock up to date when pyproject.toml changes.
+  # Pin to {{ uv_version }}.
   - repo: https://github.com/astral-sh/uv-pre-commit
-    rev: {{ uv_precommit_rev }}
+    rev: {{ uv_version }}
     hooks:
       - id: uv-lock
 

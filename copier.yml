@@ -3,7 +3,7 @@ _min_copier_version: "9.0.0"
 project_name:
   type: str
   help: Project name (human-friendly)
-  default: "My Project"
+  default: ""
 
 project_slug:
   type: str
@@ -25,6 +25,11 @@ python_version:
   help: Python version (used by tooling + CI)
   default: "3.12"
 
+uv_version:
+  type: str
+  help: uv version for required-version and pre-commit rev (e.g. 0.9.20)
+  default: "0.9.20"
+
 project_kind:
   type: str
   help: App-first by default; switch to library when you intend to build/publish.
@@ -36,31 +41,6 @@ project_kind:
 use_precommit:
   type: bool
   default: true
-
-uv_precommit_rev:
-  type: str
-  help: Version of uv used by the uv-pre-commit hook.
-  default: "0.9.20"
-
-uv_version:
-  type: str
-  help: uv version range floor (kept in uv.toml required-version)
-  default: "0.9.20"
-
-uv_version_next_minor:
-  type: str
-  help: uv version range ceiling (exclusive)
-  default: "0.10.0"
-
-uv_build_floor:
-  type: str
-  help: uv_build floor (usually matches uv version)
-  default: "{{ uv_version }}"
-
-uv_build_ceiling:
-  type: str
-  help: uv_build ceiling (exclusive)
-  default: "{{ uv_version_next_minor }}"
 
 _answers_file: .copier-answers.yml
 _skip_if_exists:

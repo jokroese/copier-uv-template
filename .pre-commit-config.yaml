@@ -1,11 +1,8 @@
 repos:
-  - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
+  - repo: https://github.com/astral-sh/uv-pre-commit
+    rev: 0.9.20
     hooks:
-      - id: trailing-whitespace
-      - id: end-of-file-fixer
-      - id: check-yaml
-      - id: check-toml
+      - id: uv-lock
 
   - repo: local
     hooks:
@@ -26,4 +23,3 @@ repos:
         entry: uv run pyright
         language: system
         pass_filenames: false
-
