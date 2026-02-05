@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 import subprocess
 from pathlib import Path
 
@@ -18,6 +19,8 @@ def _assert_no_jinja_placeholders(project_dir: Path) -> None:
     for path in project_dir.rglob("*"):
         if path.is_file() and path.suffix not in {".png", ".jpg", ".jpeg", ".gif"}:
             text = path.read_text(encoding="utf-8", errors="ignore")
+            # Ignore GitHub Actions expressions like ${{ github.ref }}.
+            text = re.sub(r"\$\{\{.*?\}\}", "", text, flags=re.DOTALL)
             if "{{" in text or "{%" in text:
                 bad.append(str(path.relative_to(project_dir)))
     assert not bad, f"Jinja placeholders leaked into output: {bad}"
