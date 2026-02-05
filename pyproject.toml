@@ -13,3 +13,8 @@ dependencies = []
 [dependency-groups]
 dev = ["pre-commit", "pytest", "pyright[nodejs]", "ruff"]
 dogfood = ["copier", "pytest-copie"]
+
+[tool.pytest.ini_options]
+markers = [
+  "dogfood: generates projects from the template and runs the full toolchain",
+]

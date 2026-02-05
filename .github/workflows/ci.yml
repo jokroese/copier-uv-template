@@ -1,8 +1,14 @@
 name: CI
 
 on:
-  push:
   pull_request:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   test:
@@ -25,7 +31,7 @@ jobs:
       - name: Type check
         run: uv run pyright
       - name: Test
-        run: uv run pytest
+        run: uv run pytest -q -m "not dogfood"
       - name: Build
         run: uv build
 
@@ -33,6 +39,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v6
@@ -47,4 +55,4 @@ jobs:
         run: uv sync --locked --group dogfood --group dev
 
       - name: Run template dogfood tests
-        run: uv run pytest -q
+        run: uv run pytest -q -m dogfood
