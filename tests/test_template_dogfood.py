@@ -48,7 +48,7 @@ def _assert_generated_repo_pins_uv(project_dir: Path) -> None:
     uv_toml = project_dir / "uv.toml"
     assert uv_toml.is_file(), "Generated repo must contain uv.toml"
     text = uv_toml.read_text(encoding="utf-8")
-    assert "required-version" in text, "uv.toml must set required-version"
+    assert 'required-version = "==' in text, "uv.toml must set exact required-version"
 
 
 def _init_git(project_dir: Path) -> None:

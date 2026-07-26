@@ -51,7 +51,7 @@ python_version:
 uv_version:
   type: str
   help: uv version for required-version and pre-commit rev
-  default: "0.9.20"
+  default: "0.11.32"
   when: false
   validator: >-
     {% if not (uv_version | regex_search('^\d+\.\d+\.\d+$')) -%}

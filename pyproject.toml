@@ -1,5 +1,5 @@
 [build-system]
-requires = ["uv_build>=0.9.20,<0.10.0"]
+requires = ["uv_build==0.11.32"]
 build-backend = "uv_build"
 
 [project]
@@ -12,7 +12,7 @@ dependencies = []
 
 [dependency-groups]
 dev = ["pre-commit", "pytest", "pyright[nodejs]", "ruff"]
-dogfood = ["copier", "pytest-copie"]
+dogfood = ["copier>=9.17.0", "pytest-copie"]
 
 [tool.pytest.ini_options]
 markers = [

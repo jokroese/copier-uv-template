@@ -1,3 +1,1 @@
-{% set parts = uv_version.split('.') %}
-{% set next_minor = parts[0] ~ '.' ~ (parts[1]|int + 1) ~ '.0' %}
-required-version = ">={{ uv_version }},<{{ next_minor }}"
+required-version = "=={{ uv_version }}"
