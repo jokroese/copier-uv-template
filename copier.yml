@@ -44,7 +44,7 @@ python_version:
   help: Minimum supported Python version (sets requires-python and tooling)
   default: "3.14"
   validator: >-
-    {% if not (python_version | regex_search('^\d+\.\d+$')) -%}
+    {% if not (python_version | regex_search('^[0-9]+[.][0-9]+$')) -%}
     Must be a MAJOR.MINOR version like 3.12 or 3.14.
     {%- endif %}
 
@@ -54,7 +54,7 @@ uv_version:
   default: "0.11.32"
   when: false
   validator: >-
-    {% if not (uv_version | regex_search('^\d+\.\d+\.\d+$')) -%}
+    {% if not (uv_version | regex_search('^[0-9]+[.][0-9]+[.][0-9]+$')) -%}
     Must be a MAJOR.MINOR.PATCH version like 0.11.32.
     {%- endif %}
 
