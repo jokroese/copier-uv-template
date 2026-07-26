@@ -10,9 +10,9 @@ readme = "README.md"
 requires-python = ">={{ python_version }}"
 dependencies = []
 
-{% if project_kind == "app" -%}
+{% if project_kind == "cli" -%}
 [project.scripts]
-{{ project_slug }} = "{{ package_name }}.__main__:main"
+{{ project_slug }} = "{{ package_name }}.cli:main"
 {%- endif %}
 
 [dependency-groups]

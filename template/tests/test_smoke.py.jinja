@@ -1,0 +1,14 @@
+from {{ package_name }} import __all__
+
+
+def test_package_importable() -> None:
+    assert __all__ == []
+{% if project_kind == "cli" %}
+
+
+def test_cli_main_prints_greeting(capsys) -> None:
+    from {{ package_name }}.cli import main
+
+    main()
+    assert "Hello from {{ project_slug }}" in capsys.readouterr().out
+{% endif %}

@@ -60,11 +60,11 @@ uv_version:
 
 project_kind:
   type: str
-  help: App-first by default; switch to library when you intend to build/publish.
+  help: Packaged CLI by default; switch to library when you intend to build/publish.
   choices:
-    - app
+    - cli
     - library
-  default: app
+  default: cli
 
 use_precommit:
   type: bool
@@ -88,3 +88,34 @@ _exclude:
   - "__pycache__"
   - "**/__pycache__/**"
   - "{% if not use_precommit %}.pre-commit-config.yaml{% endif %}"
+  - "{% if project_kind != 'cli' %}src/{{ package_name }}/cli.py{% endif %}"
+  - "{% if project_kind != 'cli' %}src/{{ package_name }}/__main__.py{% endif %}"
+
+_migrations:
+  - version: v0.2.0
+    before:
+      - |
+        python -c "
+        from pathlib import Path
+        path = Path('.copier-answers.yml')
+        if path.is_file():
+            text = path.read_text(encoding='utf-8')
+            updated = text.replace('project_kind: app', 'project_kind: cli')
+            if updated != text:
+                path.write_text(updated, encoding='utf-8')
+        "
+    after:
+      - |
+        python -c "
+        from pathlib import Path
+        answers = Path('.copier-answers.yml')
+        if not answers.is_file():
+            raise SystemExit(0)
+        text = answers.read_text(encoding='utf-8')
+        if 'project_kind: library' not in text:
+            raise SystemExit(0)
+        for path in Path('src').glob('*/__main__.py'):
+            path.unlink(missing_ok=True)
+        for path in Path('src').glob('*/cli.py'):
+            path.unlink(missing_ok=True)
+        "
