@@ -1,11 +1,7 @@
-[build-system]
-requires = ["uv_build==0.11.32"]
-build-backend = "uv_build"
-
 [project]
-name = "smoke-library"
+name = "copier-uv-template"
 version = "0.1.0"
-description = "Integration test library"
+description = "Copier template for uv Python projects"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = []
@@ -13,6 +9,9 @@ dependencies = []
 [dependency-groups]
 dev = ["pre-commit", "pytest", "pyright[nodejs]", "ruff"]
 dogfood = ["copier>=9.17.0", "pytest-copie"]
+
+[tool.uv]
+package = false
 
 [tool.pytest.ini_options]
 markers = [
