@@ -87,3 +87,4 @@ _exclude:
   - ".ruff_cache/**"
   - "__pycache__"
   - "**/__pycache__/**"
+  - "{% if not use_precommit %}.pre-commit-config.yaml{% endif %}"

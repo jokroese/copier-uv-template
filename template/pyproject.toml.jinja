@@ -16,4 +16,11 @@ dependencies = []
 {%- endif %}
 
 [dependency-groups]
-dev = ["pre-commit", "pytest", "pyright[nodejs]", "ruff"]
+dev = [
+  {%- if use_precommit %}
+  "pre-commit",
+  {%- endif %}
+  "pytest",
+  "pyright[nodejs]",
+  "ruff",
+]

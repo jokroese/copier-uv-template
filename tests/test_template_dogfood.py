@@ -126,3 +126,23 @@ def test_generate_library_project_and_build(copie) -> None:
 
     # Library-only contract: build must succeed.
     _run(["uv", "build"], cwd=project_dir)
+
+
+def test_use_precommit_false_omits_config_and_dependency(copie) -> None:
+    result = copie.copy(
+        extra_answers={
+            "project_name": "No Precommit",
+            "project_slug": "no-precommit",
+            "package_name": "no_precommit",
+            "description": "Generated without pre-commit",
+            "python_version": "3.12",
+            "project_kind": "app",
+            "use_precommit": False,
+        }
+    )
+    assert result.exit_code == 0
+    project_dir: Path = result.project_dir
+
+    assert not (project_dir / ".pre-commit-config.yaml").exists()
+    pyproject = (project_dir / "pyproject.toml").read_text(encoding="utf-8")
+    assert "pre-commit" not in pyproject
