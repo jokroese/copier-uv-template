@@ -1,0 +1,37 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "labels": ["dependencies"],
+  "packageRules": [
+    {
+      "description": "Group GitHub Actions SHA updates",
+      "matchManagers": ["github-actions"],
+      "groupName": "github-actions"
+    }
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Keep uv pins in sync across the template",
+      "managerFilePatterns": [
+        "/(^|/|\\.)copier\\.ya?ml$/",
+        "/(^|/)uv\\.toml(\\.jinja)?$/",
+        "/(^|/)pyproject\\.toml(\\.jinja)?$/",
+        "/(^|/)\\.pre-commit-config\\.yaml(\\.jinja)?$/",
+        "/(^|/)scripts\\/bump-uv\\.sh$/"
+      ],
+      "matchStrings": [
+        "default:\\s*\"(?<currentValue>\\d+\\.\\d+\\.\\d+)\"\\s*\\n\\s*when:\\s*false",
+        "required-version\\s*=\\s*\"==(?<currentValue>\\d+\\.\\d+\\.\\d+)\"",
+        "uv_build==(?<currentValue>\\d+\\.\\d+\\.\\d+)",
+        "rev:\\s*(?<currentValue>\\d+\\.\\d+\\.\\d+)",
+        "DEFAULT_UV_VERSION=\"(?<currentValue>\\d+\\.\\d+\\.\\d+)\""
+      ],
+      "datasourceTemplate": "github-releases",
+      "packageNameTemplate": "astral-sh/uv",
+      "extractVersionTemplate": "^(\\d+\\.\\d+\\.\\d+)$"
+    }
+  ]
+}
