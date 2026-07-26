@@ -1,19 +1,38 @@
-_min_copier_version: "9.0.0"
+_min_copier_version: "9.17.0"
+
+_envops:
+  undefined: jinja2.StrictUndefined
 
 project_name:
   type: str
   help: Project name (human-friendly)
-  default: ""
 
 project_slug:
   type: str
   help: Project slug (repo / distribution name)
   default: "{{ project_name|lower|replace(' ', '-')|replace('_','-') }}"
+  validator: >-
+    {% if not (project_slug | regex_search('^[a-z][a-z0-9]*(-[a-z0-9]+)*$')) -%}
+    Must be a lowercase slug: start with a letter, then letters/digits, hyphen-separated.
+    {%- endif %}
 
 package_name:
   type: str
   help: Importable package name (Python identifier)
   default: "{{ project_slug|replace('-', '_') }}"
+  validator: >-
+    {% set keywords = [
+      'False', 'None', 'True', 'and', 'as', 'assert', 'async', 'await', 'break',
+      'class', 'continue', 'def', 'del', 'elif', 'else', 'except', 'finally',
+      'for', 'from', 'global', 'if', 'import', 'in', 'is', 'lambda', 'nonlocal',
+      'not', 'or', 'pass', 'raise', 'return', 'try', 'while', 'with', 'yield',
+      'match', 'case', 'type'
+    ] -%}
+    {% if not (package_name | regex_search('^[a-z_][a-z0-9_]*$')) -%}
+    Must be a valid Python identifier (lowercase recommended).
+    {%- elif package_name in keywords -%}
+    Must not be a Python keyword.
+    {%- endif %}
 
 description:
   type: str
@@ -22,13 +41,22 @@ description:
 
 python_version:
   type: str
-  help: Python version (used by tooling + CI)
-  default: "3.12"
+  help: Minimum supported Python version (sets requires-python and tooling)
+  default: "3.14"
+  validator: >-
+    {% if not (python_version | regex_search('^\d+\.\d+$')) -%}
+    Must be a MAJOR.MINOR version like 3.12 or 3.14.
+    {%- endif %}
 
 uv_version:
   type: str
-  help: uv version for required-version and pre-commit rev (e.g. 0.9.20)
+  help: uv version for required-version and pre-commit rev
   default: "0.9.20"
+  when: false
+  validator: >-
+    {% if not (uv_version | regex_search('^\d+\.\d+\.\d+$')) -%}
+    Must be a MAJOR.MINOR.PATCH version like 0.11.32.
+    {%- endif %}
 
 project_kind:
   type: str
