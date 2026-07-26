@@ -5,6 +5,7 @@
 ## Quickstart
 
 ```bash
+git init -b main
 uv sync --dev
 git add uv.lock
 git commit -m "Add uv lockfile"
@@ -38,17 +39,3 @@ uv sync --dev
 {% if use_precommit -%}
 The uv-lock pre-commit hook also updates uv.lock when pyproject.toml changes.
 {%- endif %}
-
----
-
-## How you use it
-
-From anywhere:
-
-```bash
-copier copy path/to/copier-uv-template my-new-repo
-cd my-new-repo
-uv sync --dev
-uv run pytest
-```
-
